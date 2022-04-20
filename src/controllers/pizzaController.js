@@ -1,18 +1,50 @@
-import express from 'express';
+import { Router } from 'express';
+import { PizzaService } from '../services/pizzaService.js';
 
-const router = express.Router();
+const router = Router();
+const pizzaService = new PizzaService();
 
-router.get('/getall', (req, res) =>{
-    console.log(req.body);
-    console.log(`this is a get operation`);
+router.get('', async (req, res) => {
+  console.log(`This is a get operation`);
+  
+  const pizzas = await pizzaService.getPizza();
 
-    const valorRetorno={nombre:"Alan y Tomi"};
-    valorRetorno.apellido="Garber y Blaser";
+  return res.status(200).json(pizzas);
+});
 
-    const auth=true;
-    const authError="Sin acceso";
+router.get('/:id', async (req, res) => {
+  console.log(`Request URL Param: ${req.params.id}`);
+  console.log(`This is a get operation`);
 
-    res.status(auth ? 200:401).json(auth ? valorRetorno:authError);
-})
+  const pizza = await pizzaService.getPizzaById(req.params.id);
+
+  return res.status(200).json(pizza);
+});
+
+router.post('', async (req, res) => {
+  console.log(`This is a post operation`);
+
+  const pizza = await pizzaService.createPizza(req.body);
+
+  return res.status(201).json(pizza);
+});
+
+router.put('/:id', async (req, res) => {
+  console.log(`Request URL Param: ${req.params.id}`);
+  console.log(`This is a put operation`);
+
+  const pizza = await pizzaService.updatePizzaById(req.body);
+
+  return res.status(200).json(pizza);
+});
+
+router.delete('/:id', async (req, res) => {
+  console.log(`Request URL Param: ${req.params.id}`);
+  console.log(`This is a delete operation`);
+
+  const pizza = await pizzaService.deletePizzaById(req.params.id);
+
+  return res.status(200).json(pizza);
+});
 
 export default router;
